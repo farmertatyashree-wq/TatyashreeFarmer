@@ -159,13 +159,15 @@ const fallbackTranslations: Record<string, Record<Language, string>> = {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLanguageState] = useState<Language>(() => {
-    const saved = localStorage.getItem('preferredLanguage');
-    return (saved as Language) || 'english';
-  });
+  const [language, setLanguageState] = useState<Language>('english');
   const [translations, setTranslations] = useState<Record<string, Translation>>({});
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
+
+  useEffect(() => {
+    const saved = localStorage.getItem('preferredLanguage');
+    if (saved) setLanguageState(saved as Language);
+  }, []);
 
   // Fetch translations from Supabase
   useEffect(() => {
