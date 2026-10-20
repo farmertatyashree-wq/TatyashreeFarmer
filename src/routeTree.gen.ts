@@ -10,33 +10,167 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AlertsRouteImport } from './routes/alerts'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as CropPlannerRouteImport } from './routes/crop-planner'
+import { Route as DiseaseScannerRouteImport } from './routes/disease-scanner'
+import { Route as FertilizerCalculatorRouteImport } from './routes/fertilizer-calculator'
+import { Route as MarketRouteImport } from './routes/market'
+import { Route as MySchemesRouteImport } from './routes/my-schemes'
+import { Route as WeatherRouteImport } from './routes/weather'
+import { Route as SchemesIndexRouteImport } from './routes/schemes.index'
+import { Route as SchemesIdRouteImport } from './routes/schemes.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AlertsRoute = AlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CropPlannerRoute = CropPlannerRouteImport.update({
+  id: '/crop-planner',
+  path: '/crop-planner',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiseaseScannerRoute = DiseaseScannerRouteImport.update({
+  id: '/disease-scanner',
+  path: '/disease-scanner',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FertilizerCalculatorRoute = FertilizerCalculatorRouteImport.update({
+  id: '/fertilizer-calculator',
+  path: '/fertilizer-calculator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketRoute = MarketRouteImport.update({
+  id: '/market',
+  path: '/market',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MySchemesRoute = MySchemesRouteImport.update({
+  id: '/my-schemes',
+  path: '/my-schemes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WeatherRoute = WeatherRouteImport.update({
+  id: '/weather',
+  path: '/weather',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SchemesIndexRoute = SchemesIndexRouteImport.update({
+  id: '/schemes/',
+  path: '/schemes/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SchemesIdRoute = SchemesIdRouteImport.update({
+  id: '/schemes/$id',
+  path: '/schemes/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/alerts': typeof AlertsRoute
+  '/auth': typeof AuthRoute
+  '/crop-planner': typeof CropPlannerRoute
+  '/disease-scanner': typeof DiseaseScannerRoute
+  '/fertilizer-calculator': typeof FertilizerCalculatorRoute
+  '/market': typeof MarketRoute
+  '/my-schemes': typeof MySchemesRoute
+  '/weather': typeof WeatherRoute
+  '/schemes/$id': typeof SchemesIdRoute
+  '/schemes/': typeof SchemesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/alerts': typeof AlertsRoute
+  '/auth': typeof AuthRoute
+  '/crop-planner': typeof CropPlannerRoute
+  '/disease-scanner': typeof DiseaseScannerRoute
+  '/fertilizer-calculator': typeof FertilizerCalculatorRoute
+  '/market': typeof MarketRoute
+  '/my-schemes': typeof MySchemesRoute
+  '/weather': typeof WeatherRoute
+  '/schemes/$id': typeof SchemesIdRoute
+  '/schemes': typeof SchemesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/alerts': typeof AlertsRoute
+  '/auth': typeof AuthRoute
+  '/crop-planner': typeof CropPlannerRoute
+  '/disease-scanner': typeof DiseaseScannerRoute
+  '/fertilizer-calculator': typeof FertilizerCalculatorRoute
+  '/market': typeof MarketRoute
+  '/my-schemes': typeof MySchemesRoute
+  '/weather': typeof WeatherRoute
+  '/schemes/$id': typeof SchemesIdRoute
+  '/schemes/': typeof SchemesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/alerts'
+    | '/auth'
+    | '/crop-planner'
+    | '/disease-scanner'
+    | '/fertilizer-calculator'
+    | '/market'
+    | '/my-schemes'
+    | '/weather'
+    | '/schemes/$id'
+    | '/schemes/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/alerts'
+    | '/auth'
+    | '/crop-planner'
+    | '/disease-scanner'
+    | '/fertilizer-calculator'
+    | '/market'
+    | '/my-schemes'
+    | '/weather'
+    | '/schemes/$id'
+    | '/schemes'
+  id:
+    | '__root__'
+    | '/'
+    | '/alerts'
+    | '/auth'
+    | '/crop-planner'
+    | '/disease-scanner'
+    | '/fertilizer-calculator'
+    | '/market'
+    | '/my-schemes'
+    | '/weather'
+    | '/schemes/$id'
+    | '/schemes/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AlertsRoute: typeof AlertsRoute
+  AuthRoute: typeof AuthRoute
+  CropPlannerRoute: typeof CropPlannerRoute
+  DiseaseScannerRoute: typeof DiseaseScannerRoute
+  FertilizerCalculatorRoute: typeof FertilizerCalculatorRoute
+  MarketRoute: typeof MarketRoute
+  MySchemesRoute: typeof MySchemesRoute
+  WeatherRoute: typeof WeatherRoute
+  SchemesIdRoute: typeof SchemesIdRoute
+  SchemesIndexRoute: typeof SchemesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +182,91 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/alerts': {
+      id: '/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof AlertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/crop-planner': {
+      id: '/crop-planner'
+      path: '/crop-planner'
+      fullPath: '/crop-planner'
+      preLoaderRoute: typeof CropPlannerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/disease-scanner': {
+      id: '/disease-scanner'
+      path: '/disease-scanner'
+      fullPath: '/disease-scanner'
+      preLoaderRoute: typeof DiseaseScannerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fertilizer-calculator': {
+      id: '/fertilizer-calculator'
+      path: '/fertilizer-calculator'
+      fullPath: '/fertilizer-calculator'
+      preLoaderRoute: typeof FertilizerCalculatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/market': {
+      id: '/market'
+      path: '/market'
+      fullPath: '/market'
+      preLoaderRoute: typeof MarketRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/my-schemes': {
+      id: '/my-schemes'
+      path: '/my-schemes'
+      fullPath: '/my-schemes'
+      preLoaderRoute: typeof MySchemesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/weather': {
+      id: '/weather'
+      path: '/weather'
+      fullPath: '/weather'
+      preLoaderRoute: typeof WeatherRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/schemes/': {
+      id: '/schemes/'
+      path: '/schemes'
+      fullPath: '/schemes/'
+      preLoaderRoute: typeof SchemesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/schemes/$id': {
+      id: '/schemes/$id'
+      path: '/schemes/$id'
+      fullPath: '/schemes/$id'
+      preLoaderRoute: typeof SchemesIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AlertsRoute: AlertsRoute,
+  AuthRoute: AuthRoute,
+  CropPlannerRoute: CropPlannerRoute,
+  DiseaseScannerRoute: DiseaseScannerRoute,
+  FertilizerCalculatorRoute: FertilizerCalculatorRoute,
+  MarketRoute: MarketRoute,
+  MySchemesRoute: MySchemesRoute,
+  WeatherRoute: WeatherRoute,
+  SchemesIdRoute: SchemesIdRoute,
+  SchemesIndexRoute: SchemesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
