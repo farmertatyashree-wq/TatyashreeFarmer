@@ -45,8 +45,17 @@ const AppDownloadSection: React.FC = () => {
     };
   }, []);
 
+  const [showHelp, setShowHelp] = useState(false);
+
   const handleInstall = async () => {
-    if (!deferredPrompt) return;
+    if (!deferredPrompt) {
+      if (window.self !== window.top) {
+        window.open(window.location.href, '_blank');
+        return;
+      }
+      setShowHelp(true);
+      return;
+    }
 
     await deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
@@ -107,15 +116,20 @@ const AppDownloadSection: React.FC = () => {
               variant="outline"
               className="h-auto py-3 flex-col gap-1 hover:bg-foreground hover:text-background transition-colors col-span-2"
               onClick={handleInstall}
-              disabled={!deferredPrompt}
             >
               <Smartphone className="h-6 w-6" />
-              <span className="text-xs font-medium">
-                {deferredPrompt 
-                  ? (t('download.install_now') || 'Install App') 
-                  : (t('download.open_browser') || 'Open in Chrome to Install')}
-              </span>
+              <span className="text-xs font-medium">Install App</span>
             </Button>
+            {showHelp && (
+              <div className="col-span-2 bg-muted/50 rounded-lg p-4 text-sm text-muted-foreground">
+                <p className="font-medium text-foreground mb-2">To install:</p>
+                <ol className="list-decimal list-inside space-y-1">
+                  <li>Open this site in Chrome or Edge</li>
+                  <li>Tap the menu (⋮) at the top right</li>
+                  <li>Tap "Install app" or "Add to Home screen"</li>
+                </ol>
+              </div>
+            )}
           </div>
         )}
       </CardContent>
