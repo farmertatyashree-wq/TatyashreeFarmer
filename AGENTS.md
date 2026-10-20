@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Imported FarmWise screens keep their react-router-style imports via src/lib/router-compat.tsx (adapter over TanStack Router) so the original pages run unchanged.
