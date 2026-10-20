@@ -45,8 +45,17 @@ const AppDownloadSection: React.FC = () => {
     };
   }, []);
 
+  const [showHelp, setShowHelp] = useState(false);
+
   const handleInstall = async () => {
-    if (!deferredPrompt) return;
+    if (!deferredPrompt) {
+      if (window.self !== window.top) {
+        window.open(window.location.href, '_blank');
+        return;
+      }
+      setShowHelp(true);
+      return;
+    }
 
     await deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
