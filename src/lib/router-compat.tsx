@@ -46,7 +46,8 @@ export function useLocation() {
 }
 
 export function useParams<T extends Record<string, string>>(): Partial<T> {
-  return useTParams({ strict: false }) as Partial<T>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (useTParams as any)({ strict: false }) as Partial<T>;
 }
 
 export function Navigate({ to, replace }: { to: string; replace?: boolean }) {
