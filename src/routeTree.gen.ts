@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CropPlannerRouteImport } from './routes/crop-planner'
 import { Route as DiseaseScannerRouteImport } from './routes/disease-scanner'
 import { Route as FertilizerCalculatorRouteImport } from './routes/fertilizer-calculator'
+import { Route as FinanceRouteImport } from './routes/finance'
 import { Route as MarketRouteImport } from './routes/market'
 import { Route as MySchemesRouteImport } from './routes/my-schemes'
 import { Route as WeatherRouteImport } from './routes/weather'
@@ -51,6 +52,11 @@ const FertilizerCalculatorRoute = FertilizerCalculatorRouteImport.update({
   path: '/fertilizer-calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FinanceRoute = FinanceRouteImport.update({
+  id: '/finance',
+  path: '/finance',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MarketRoute = MarketRouteImport.update({
   id: '/market',
   path: '/market',
@@ -84,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/crop-planner': typeof CropPlannerRoute
   '/disease-scanner': typeof DiseaseScannerRoute
   '/fertilizer-calculator': typeof FertilizerCalculatorRoute
+  '/finance': typeof FinanceRoute
   '/market': typeof MarketRoute
   '/my-schemes': typeof MySchemesRoute
   '/weather': typeof WeatherRoute
@@ -97,6 +104,7 @@ export interface FileRoutesByTo {
   '/crop-planner': typeof CropPlannerRoute
   '/disease-scanner': typeof DiseaseScannerRoute
   '/fertilizer-calculator': typeof FertilizerCalculatorRoute
+  '/finance': typeof FinanceRoute
   '/market': typeof MarketRoute
   '/my-schemes': typeof MySchemesRoute
   '/weather': typeof WeatherRoute
@@ -111,6 +119,7 @@ export interface FileRoutesById {
   '/crop-planner': typeof CropPlannerRoute
   '/disease-scanner': typeof DiseaseScannerRoute
   '/fertilizer-calculator': typeof FertilizerCalculatorRoute
+  '/finance': typeof FinanceRoute
   '/market': typeof MarketRoute
   '/my-schemes': typeof MySchemesRoute
   '/weather': typeof WeatherRoute
@@ -126,6 +135,7 @@ export interface FileRouteTypes {
     | '/crop-planner'
     | '/disease-scanner'
     | '/fertilizer-calculator'
+    | '/finance'
     | '/market'
     | '/my-schemes'
     | '/weather'
@@ -139,6 +149,7 @@ export interface FileRouteTypes {
     | '/crop-planner'
     | '/disease-scanner'
     | '/fertilizer-calculator'
+    | '/finance'
     | '/market'
     | '/my-schemes'
     | '/weather'
@@ -152,6 +163,7 @@ export interface FileRouteTypes {
     | '/crop-planner'
     | '/disease-scanner'
     | '/fertilizer-calculator'
+    | '/finance'
     | '/market'
     | '/my-schemes'
     | '/weather'
@@ -166,6 +178,7 @@ export interface RootRouteChildren {
   CropPlannerRoute: typeof CropPlannerRoute
   DiseaseScannerRoute: typeof DiseaseScannerRoute
   FertilizerCalculatorRoute: typeof FertilizerCalculatorRoute
+  FinanceRoute: typeof FinanceRoute
   MarketRoute: typeof MarketRoute
   MySchemesRoute: typeof MySchemesRoute
   WeatherRoute: typeof WeatherRoute
@@ -217,6 +230,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FertilizerCalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/finance': {
+      id: '/finance'
+      path: '/finance'
+      fullPath: '/finance'
+      preLoaderRoute: typeof FinanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/market': {
       id: '/market'
       path: '/market'
@@ -262,6 +282,7 @@ const rootRouteChildren: RootRouteChildren = {
   CropPlannerRoute: CropPlannerRoute,
   DiseaseScannerRoute: DiseaseScannerRoute,
   FertilizerCalculatorRoute: FertilizerCalculatorRoute,
+  FinanceRoute: FinanceRoute,
   MarketRoute: MarketRoute,
   MySchemesRoute: MySchemesRoute,
   WeatherRoute: WeatherRoute,
