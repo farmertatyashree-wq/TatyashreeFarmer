@@ -14,6 +14,93 @@ export type Database = {
   }
   public: {
     Tables: {
+      farm_expenses: {
+        Row: {
+          amount: number
+          category: string
+          created_at: string
+          crop_name: string
+          expense_date: string
+          farm_name: string | null
+          id: string
+          notes: string | null
+          quantity: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          category: string
+          created_at?: string
+          crop_name: string
+          expense_date: string
+          farm_name?: string | null
+          id?: string
+          notes?: string | null
+          quantity?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          amount?: number
+          category?: string
+          created_at?: string
+          crop_name?: string
+          expense_date?: string
+          farm_name?: string | null
+          id?: string
+          notes?: string | null
+          quantity?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      farm_income: {
+        Row: {
+          created_at: string
+          crop_name: string
+          id: string
+          market_name: string | null
+          notes: string | null
+          price_per_unit: number
+          quantity: number
+          sale_date: string
+          total_amount: number | null
+          unit: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          crop_name: string
+          id?: string
+          market_name?: string | null
+          notes?: string | null
+          price_per_unit: number
+          quantity: number
+          sale_date: string
+          total_amount?: number | null
+          unit?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          crop_name?: string
+          id?: string
+          market_name?: string | null
+          notes?: string | null
+          price_per_unit?: number
+          quantity?: number
+          sale_date?: string
+          total_amount?: number | null
+          unit?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
