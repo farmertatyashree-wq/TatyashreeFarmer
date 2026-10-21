@@ -1,4 +1,4 @@
-import { Home, Sprout, Bug, Cloud, TrendingUp } from "lucide-react";
+import { Home, Sprout, Bug, Cloud, TrendingUp, Wallet } from "lucide-react";
 import { NavLink } from "@/lib/router-compat";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -12,6 +12,7 @@ const BottomNav = () => {
     { to: "/disease-scanner", icon: Bug, label: t('nav.scan') },
     { to: "/weather", icon: Cloud, label: t('nav.weather') },
     { to: "/market", icon: TrendingUp, label: t('nav.market') },
+    { to: "/finance", icon: Wallet, label: t('nav.finance') },
   ];
 
   return (

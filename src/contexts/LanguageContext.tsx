@@ -21,6 +21,7 @@ interface LanguageContextType {
 // Fallback translations for offline/quick loading
 const fallbackTranslations: Record<string, Record<Language, string>> = {
   'nav.home': { english: 'Home', hindi: 'होम', marathi: 'मुख्यपृष्ठ' },
+  'nav.finance': { english: 'Expense & Profit', hindi: 'खर्च और मुनाफा', marathi: 'खर्च आणि नफा' },
   'nav.crop_planner': { english: 'Crop Planner', hindi: 'फसल योजनाकार', marathi: 'पीक नियोजक' },
   'nav.disease_scanner': { english: 'Disease Scanner', hindi: 'रोग स्कैनर', marathi: 'रोग स्कॅनर' },
   'nav.weather': { english: 'Weather', hindi: 'मौसम', marathi: 'हवामान' },
