@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Imported FarmWise screens keep their react-router-style imports via src/lib/router-compat.tsx (adapter over TanStack Router) so the original pages run unchanged.
+- Farm finance math lives in src/lib/finance.ts (pure, tested in src/test/finance.test.ts); sale totals are also computed by the database so stored totals can't drift.
