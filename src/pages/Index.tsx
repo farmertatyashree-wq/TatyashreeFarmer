@@ -20,7 +20,8 @@ import {
   FlaskConical,
   IndianRupee,
   ShieldCheck,
-  Calculator
+  Calculator,
+  PawPrint
 } from "lucide-react";
 
 const Index = () => {
@@ -132,6 +133,28 @@ const Index = () => {
             ))}
           </div>
         </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 [&>*]:h-full">
+        {/* Livestock market */}
+        <Link to="/livestock">
+          <Card variant="elevated" className="h-full border-primary/20 hover:scale-[1.01] transition-transform">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <PawPrint className="h-6 w-6 text-primary" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold">
+                    {language === 'marathi' ? 'जनावरे खरेदी-विक्री' : language === 'hindi' ? 'पशु खरीद-बिक्री' : 'Livestock Buy & Sell'}
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {language === 'marathi' ? 'गाय, म्हैस, शेळी विका किंवा विकत घ्या' : language === 'hindi' ? 'गाय, भैंस, बकरी बेचें या खरीदें' : 'Sell or buy cows, buffaloes, goats'}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
 
         {/* Fertilizer Calculator */}
         <Link to="/fertilizer-calculator">
@@ -288,6 +311,7 @@ const Index = () => {
             </div>
           </CardContent>
         </Card>
+        </div>
 
         {/* Footer */}
         <div className="text-center pt-4 pb-20 text-xs text-muted-foreground">
