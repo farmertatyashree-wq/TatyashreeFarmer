@@ -101,6 +101,51 @@ export type Database = {
         }
         Relationships: []
       }
+      livestock_listings: {
+        Row: {
+          age_years: number | null
+          animal: string
+          breed: string | null
+          contact_phone: string
+          created_at: string
+          description: string | null
+          id: string
+          listing_type: string
+          location: string
+          price: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          age_years?: number | null
+          animal: string
+          breed?: string | null
+          contact_phone: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          listing_type: string
+          location: string
+          price: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          age_years?: number | null
+          animal?: string
+          breed?: string | null
+          contact_phone?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          listing_type?: string
+          location?: string
+          price?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
