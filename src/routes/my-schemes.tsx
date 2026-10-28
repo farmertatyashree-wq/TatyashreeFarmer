@@ -4,9 +4,11 @@ import Page from "@/pages/MySchemes";
 export const Route = createFileRoute("/my-schemes")({
   head: () => ({
     meta: [
-      { title: "My Schemes | FarmWise" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { title: "My Schemes | Tatyashree Farmer" },
       { name: "description", content: "Schemes you have saved or applied for." },
-      { property: "og:title", content: "My Schemes | FarmWise" },
+      { property: "og:title", content: "My Schemes | Tatyashree Farmer" },
       { property: "og:description", content: "Schemes you have saved or applied for." },
     ],
   }),

@@ -84,13 +84,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "FarmWise Assistant" },
+      { title: "Tatyashree Farmer" },
       { name: "description", content: "Smart farming assistant for crops, weather, markets and schemes." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "theme-color", content: "#2f7d32" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
@@ -101,7 +100,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "manifest", href: "/manifest.webmanifest" },
       { rel: "apple-touch-icon", href: "/pwa-192x192.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300..800&family=Inter:wght@400;500;600;700&family=Lora:wght@400;600&family=Space+Mono&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300..800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Lora:wght@400;600&family=Space+Mono&display=swap" },
     ],
   }),
   shellComponent: RootShell,
@@ -112,7 +111,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="mr">
       <head>
         <HeadContent />
       </head>

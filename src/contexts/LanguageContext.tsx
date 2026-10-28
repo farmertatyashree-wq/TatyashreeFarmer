@@ -1,8 +1,9 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './AuthContext';
-
-export type Language = 'english' | 'hindi' | 'marathi';
+import { DEFAULT_LANGUAGE, isLanguage, resolveLanguage, languageLocales, localizedCurrency, localizedDate, localizedNumber, type Language } from '@/lib/localization';
+import { dashboardTranslations } from '@/lib/dashboard-translations';
+export type { Language } from '@/lib/localization';
 
 interface Translation {
   key: string;
@@ -16,10 +17,14 @@ interface LanguageContextType {
   setLanguage: (lang: Language) => void;
   t: (key: string, fallback?: string) => string;
   isLoading: boolean;
+  formatNumber: (value: number, options?: Intl.NumberFormatOptions) => string;
+  formatCurrency: (value: number) => string;
+  formatDate: (value: Date | string, options?: Intl.DateTimeFormatOptions) => string;
 }
 
 // Fallback translations for offline/quick loading
 const fallbackTranslations: Record<string, Record<Language, string>> = {
+  ...dashboardTranslations,
   'nav.home': { english: 'Home', hindi: 'होम', marathi: 'मुख्यपृष्ठ' },
   'nav.finance': { english: 'Expense & Profit', hindi: 'खर्च और मुनाफा', marathi: 'खर्च आणि नफा' },
   'nav.crop_planner': { english: 'Crop Planner', hindi: 'फसल योजनाकार', marathi: 'पीक नियोजक' },
@@ -160,15 +165,20 @@ const fallbackTranslations: Record<string, Record<Language, string>> = {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLanguageState] = useState<Language>('english');
+  const [language, setLanguageState] = useState<Language>(DEFAULT_LANGUAGE);
   const [translations, setTranslations] = useState<Record<string, Translation>>({});
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
 
   useEffect(() => {
-    const saved = localStorage.getItem('preferredLanguage');
-    if (saved) setLanguageState(saved as Language);
+    try {
+      setLanguageState(resolveLanguage(localStorage.getItem('preferredLanguage')));
+    } catch { /* The local dictionary works even when storage is unavailable. */ }
   }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = languageLocales[language].split('-')[0];
+  }, [language]);
 
   // Fetch translations from Supabase
   useEffect(() => {
@@ -205,9 +215,9 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           .eq('id', user.id)
           .single();
         
-        if (profile?.preferred_language) {
-          setLanguageState(profile.preferred_language as Language);
-          localStorage.setItem('preferredLanguage', profile.preferred_language);
+        if (isLanguage(profile?.preferred_language)) {
+          setLanguageState(profile.preferred_language);
+          try { localStorage.setItem('preferredLanguage', profile.preferred_language); } catch { /* Optional storage. */ }
         }
       }
     };
@@ -217,7 +227,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const setLanguage = useCallback(async (lang: Language) => {
     setLanguageState(lang);
-    localStorage.setItem('preferredLanguage', lang);
+    try { localStorage.setItem('preferredLanguage', lang); } catch { /* Keep the current selection in memory. */ }
     
     // Update user profile if logged in
     if (user) {
@@ -247,7 +257,11 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, [translations, language]);
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t, isLoading }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t, isLoading,
+      formatNumber: (value, options) => localizedNumber(value, language, options),
+      formatCurrency: (value) => localizedCurrency(value, language),
+      formatDate: (value, options) => localizedDate(value, language, options),
+    }}>
       {children}
     </LanguageContext.Provider>
   );

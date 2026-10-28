@@ -4,9 +4,11 @@ import Page from "@/pages/Alerts";
 export const Route = createFileRoute("/alerts")({
   head: () => ({
     meta: [
-      { title: "Alerts | FarmWise" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { title: "Alerts | Tatyashree Farmer" },
       { name: "description", content: "Farm alerts and notifications." },
-      { property: "og:title", content: "Alerts | FarmWise" },
+      { property: "og:title", content: "Alerts | Tatyashree Farmer" },
       { property: "og:description", content: "Farm alerts and notifications." },
     ],
   }),

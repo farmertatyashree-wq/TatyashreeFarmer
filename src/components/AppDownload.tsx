@@ -35,13 +35,15 @@ const AppDownloadSection: React.FC = () => {
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     
     // Listen for successful install
-    window.addEventListener('appinstalled', () => {
+    const handleInstalled = () => {
       setIsInstalled(true);
       setDeferredPrompt(null);
-    });
+    };
+    window.addEventListener('appinstalled', handleInstalled);
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleInstalled);
     };
   }, []);
 
@@ -118,15 +120,15 @@ const AppDownloadSection: React.FC = () => {
               onClick={handleInstall}
             >
               <Smartphone className="h-6 w-6" />
-              <span className="text-xs font-medium">Install App</span>
+              <span className="text-sm font-medium">{t('download.install')}</span>
             </Button>
             {showHelp && (
               <div className="col-span-2 bg-muted/50 rounded-lg p-4 text-sm text-muted-foreground">
-                <p className="font-medium text-foreground mb-2">To install:</p>
+                <p className="font-medium text-foreground mb-2">{t('download.help')}</p>
                 <ol className="list-decimal list-inside space-y-1">
-                  <li>Open this site in Chrome or Edge</li>
-                  <li>Tap the menu (⋮) at the top right</li>
-                  <li>Tap "Install app" or "Add to Home screen"</li>
+                  <li>{t('download.step1')}</li>
+                  <li>{t('download.step2')}</li>
+                  <li>{t('download.step3')}</li>
                 </ol>
               </div>
             )}
