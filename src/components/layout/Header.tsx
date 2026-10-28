@@ -45,8 +45,8 @@ const Header = ({ title, showBack = false }: HeaderProps) => {
 
   return (
     <header className="sticky top-0 z-40 bg-card/95 backdrop-blur-md border-b border-border">
-      <div className="flex items-center justify-between px-4 py-3">
-        <div className="flex items-center gap-3">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-3">
+        <div className="flex min-w-0 items-center gap-2">
           {showBack ? (
             <Link to="/" className="text-foreground">
               <svg
@@ -66,30 +66,27 @@ const Header = ({ title, showBack = false }: HeaderProps) => {
           ) : (
             <div className="flex items-center gap-2">
               <img src={logoImg} alt="TatyaShree Farmer" className="w-10 h-10 rounded-xl object-contain bg-background" />
-              <span className="text-lg font-bold text-foreground">{displayTitle}</span>
+               <span className="text-sm sm:text-lg font-bold text-foreground break-words">{displayTitle}</span>
             </div>
           )}
           {showBack && (
-            <span className="text-lg font-semibold text-foreground">{displayTitle}</span>
+             <span className="text-sm sm:text-lg font-semibold text-foreground break-words">{displayTitle}</span>
           )}
         </div>
         
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 ml-auto">
           <LanguageSwitcher />
           
           <Link to="/alerts">
-            <Button variant="ghost" size="icon" className="relative">
+             <Button variant="ghost" size="icon" aria-label={t('nav.alerts')}>
               <Bell className="h-5 w-5" />
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-destructive rounded-full text-[10px] text-destructive-foreground flex items-center justify-center font-bold">
-                3
-              </span>
             </Button>
           </Link>
           
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-full">
+                 <Button variant="ghost" size="icon" className="rounded-full" aria-label={t('nav.profile')}>
                   <Avatar className="h-8 w-8">
                     <AvatarFallback className="bg-primary text-primary-foreground text-xs">
                       {getUserInitials()}
@@ -99,7 +96,7 @@ const Header = ({ title, showBack = false }: HeaderProps) => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
                 <div className="px-2 py-1.5">
-                  <p className="text-sm font-medium">{user?.user_metadata?.full_name || "Farmer"}</p>
+                   <p className="text-sm font-medium">{user?.user_metadata?.full_name || t('dashboard.farmer')}</p>
                   <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
                 </div>
                 <DropdownMenuSeparator />

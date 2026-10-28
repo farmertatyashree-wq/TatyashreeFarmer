@@ -15,7 +15,7 @@ const PENDING_SYNCS_KEY = 'pending_syncs';
 const OFFLINE_DATA_KEY = 'offline_data';
 
 export const useOfflineSync = () => {
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [isOnline, setIsOnline] = useState(true);
   const [isSyncing, setIsSyncing] = useState(false);
   const [pendingCount, setPendingCount] = useState(0);
   const { user } = useAuth();
@@ -131,6 +131,7 @@ export const useOfflineSync = () => {
 
   // Online/offline event listeners
   useEffect(() => {
+    setIsOnline(navigator.onLine);
     const handleOnline = () => {
       setIsOnline(true);
       toast({

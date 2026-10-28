@@ -23,7 +23,7 @@ const LanguageSwitcher: React.FC = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="gap-2 h-9 px-3">
+         <Button variant="ghost" size="sm" className="gap-2 min-h-11 px-2">
           <Globe className="h-4 w-4" />
           <span className="text-sm font-medium">{currentLang?.nativeLabel}</span>
         </Button>
