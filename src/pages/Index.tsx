@@ -1,328 +1,92 @@
-import { Link } from "@/lib/router-compat";
-import AppLayout from "@/components/layout/AppLayout";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@/contexts/AuthContext";
-import { useLanguage } from "@/contexts/LanguageContext";
-import AppDownloadSection from "@/components/AppDownload";
-import ChatBot from "@/components/ChatBot";
-import { 
-  Sprout, 
-  Bug,
-  Cloud, 
-  TrendingUp, 
-  Building2, 
-  Bell,
-  FolderOpen,
-  Droplets,
-  Sun,
-  Wind,
-  FlaskConical,
-  IndianRupee,
-  ShieldCheck,
-  Calculator,
-  PawPrint
-} from "lucide-react";
+import { useState } from 'react';
+import { Link } from '@/lib/router-compat';
+import AppLayout from '@/components/layout/AppLayout';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
+import AppDownloadSection from '@/components/AppDownload';
+import ChatBot from '@/components/ChatBot';
+import farmPhoto from '@/assets/farm-dashboard.jpg';
+import { Sprout, Bug, Cloud, TrendingUp, Building2, Bell, FolderOpen, FlaskConical, IndianRupee, ShieldCheck, Calculator, PawPrint, Wallet, Search, ArrowUpRight, ChevronDown, X } from 'lucide-react';
 
 const Index = () => {
   const { user } = useAuth();
-  const { t, language } = useLanguage();
-  const userName = user?.user_metadata?.full_name?.split(" ")[0] || "Farmer";
-  
-  const getAIPoweredText = () => {
-    return language === 'marathi' ? 'AI सहाय्यित' : language === 'hindi' ? 'AI संचालित' : 'AI-powered';
-  };
-
-  const quickActions = [
-    { to: "/crop-planner", icon: Sprout, label: t('nav.crop_planner'), color: "bg-primary", description: t('crop.planner_title') },
-    { to: "/disease-scanner", icon: Bug, label: t('nav.disease_scanner'), color: "bg-accent", description: getAIPoweredText() },
-    { to: "/weather", icon: Cloud, label: t('nav.weather'), color: "bg-info", description: t('weather.forecast') },
-    { to: "/market", icon: TrendingUp, label: t('nav.market'), color: "bg-success", description: t('dashboard.mandi_prices') },
-    { to: "/schemes", icon: Building2, label: t('nav.schemes'), color: "bg-warning", description: t('dashboard.govt_schemes') },
-    { to: "/my-schemes", icon: FolderOpen, label: t('nav.my_schemes'), color: "bg-secondary", description: t('scheme.save_scheme') },
+  const { t } = useLanguage();
+  const [search, setSearch] = useState('');
+  const [showServices, setShowServices] = useState(false);
+  const userName = user?.user_metadata?.full_name?.split(' ')[0] || t('dashboard.farmer');
+  const tools = [
+    { to: '/crop-planner', icon: Sprout, label: t('nav.crop_planner'), description: t('planner.plan'), tone: 'bg-primary/10 text-primary' },
+    { to: '/disease-scanner', icon: Bug, label: t('nav.scan'), description: t('dashboard.doctor_desc'), tone: 'bg-accent text-accent-foreground' },
+    { to: '/weather', icon: Cloud, label: t('nav.weather'), description: t('weather.forecast'), tone: 'bg-info/10 text-info' },
+    { to: '/market', icon: TrendingUp, label: t('nav.market'), description: t('dashboard.mandi_prices'), tone: 'bg-success/10 text-primary' },
+    { to: '/finance', icon: Wallet, label: t('nav.finance'), description: t('dashboard.finance_desc'), tone: 'bg-primary/10 text-primary' },
+    { to: '/livestock', icon: PawPrint, label: t('dashboard.livestock'), description: t('dashboard.livestock_desc'), tone: 'bg-accent text-accent-foreground' },
+    { to: '/schemes', icon: Building2, label: t('nav.schemes'), description: t('dashboard.govt_schemes'), tone: 'bg-info/10 text-info' },
+    { to: '/fertilizer-calculator', icon: Calculator, label: t('dashboard.fertilizer'), description: t('dashboard.fertilizer_desc'), tone: 'bg-secondary text-secondary-foreground' },
   ];
-
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    const greetings = {
-      english: { morning: "Good Morning", afternoon: "Good Afternoon", evening: "Good Evening" },
-      hindi: { morning: "सुप्रभात", afternoon: "नमस्ते", evening: "शुभ संध्या" },
-      marathi: { morning: "सुप्रभात", afternoon: "नमस्कार", evening: "शुभ संध्याकाळ" }
-    };
-    const lang = language as keyof typeof greetings;
-    const timeOfDay = hour < 12 ? 'morning' : hour < 17 ? 'afternoon' : 'evening';
-    return greetings[lang]?.[timeOfDay] || greetings.english[timeOfDay];
-  };
+  const services = [
+    { href: 'https://bhulekh.mahabhumi.gov.in/', icon: FolderOpen, label: t('dashboard.satbara') },
+    { href: 'https://soilhealth.dac.gov.in/', icon: FlaskConical, label: t('dashboard.soil') },
+    { href: 'https://pmkisan.gov.in/', icon: IndianRupee, label: t('dashboard.pmkisan') },
+    { href: 'https://pmfby.gov.in/', icon: ShieldCheck, label: t('dashboard.insurance') },
+  ];
+  const query = search.trim().toLocaleLowerCase();
+  const filtered = tools.filter(tool => `${tool.label} ${tool.description}`.toLocaleLowerCase().includes(query));
 
   return (
     <AppLayout>
-      <div className="px-4 py-5 space-y-6 animate-fade-in">
-        {/* Welcome Banner */}
-        <Card variant="elevated" className="bg-gradient-hero text-primary-foreground overflow-hidden relative">
-          <CardContent className="p-5 relative z-10">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-primary-foreground/80 text-sm font-medium">{getGreeting()},</p>
-                <h1 className="text-2xl font-bold mt-1">{t('dashboard.welcome')} {userName}! 👋</h1>
-                <p className="text-primary-foreground/90 text-sm mt-2 max-w-[200px]">
-                  {t('app.tagline')}
-                </p>
-              </div>
-              <div className="text-5xl animate-float">🌾</div>
-            </div>
-          </CardContent>
-          <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-primary-foreground/10 rounded-full" />
-          <div className="absolute -right-4 -bottom-4 w-20 h-20 bg-primary-foreground/10 rounded-full" />
-        </Card>
+      <section className="relative overflow-hidden bg-primary text-primary-foreground">
+        <img src={farmPhoto} alt="" width={1536} height={512} className="absolute inset-0 h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-farm-overlay" />
+        <div className="relative mx-auto max-w-6xl px-5 py-9 sm:px-8 sm:py-12">
+          <p className="text-sm font-medium text-primary-foreground/90">{t('dashboard.welcome')}, {userName}</p>
+          <h1 className="mt-2 text-3xl sm:text-4xl font-bold leading-tight">{t('app.name')}</h1>
+          <p className="mt-3 text-sm sm:text-base text-primary-foreground/90">{t('app.tagline')}</p>
+          <Button asChild variant="secondary" className="mt-6 min-h-11 gap-2">
+            <Link to="/finance"><Wallet className="h-4 w-4" />{t('nav.finance')}<ArrowUpRight className="h-4 w-4" /></Link>
+          </Button>
+        </div>
+      </section>
 
-        {/* Weather Quick View */}
-        <Card variant="glass">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-sky flex items-center justify-center">
-                  <Sun className="h-7 w-7 text-info-foreground" />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">{t('dashboard.today_weather')}</p>
-                  <p className="text-2xl font-bold">28°C</p>
-                </div>
-              </div>
-              <div className="flex gap-4 text-sm">
-                <div className="flex items-center gap-1 text-muted-foreground">
-                  <Droplets className="h-4 w-4 text-info" />
-                  <span>65%</span>
-                </div>
-                <div className="flex items-center gap-1 text-muted-foreground">
-                  <Wind className="h-4 w-4" />
-                  <span>12 km/h</span>
-                </div>
-              </div>
+      <div className="mx-auto max-w-6xl px-4 py-6 sm:px-8 space-y-7">
+        <section aria-labelledby="tools-heading">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <h2 id="tools-heading" className="text-xl font-bold">{t('dashboard.tools')}</h2>
+            <div className="relative w-full sm:w-80">
+              <Search className="absolute left-3 top-3.5 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+              <Input aria-label={t('dashboard.search')} placeholder={t('dashboard.search')} value={search} onChange={event => setSearch(event.target.value)} className="h-11 pl-10 pr-11 bg-card" />
+              {search && <Button variant="ghost" size="icon" onClick={() => setSearch('')} aria-label={t('dashboard.clear_search')} className="absolute right-0 top-0 h-11 w-11"><X className="h-4 w-4" /></Button>}
             </div>
-            <div className="mt-3 pt-3 border-t border-border flex items-center gap-2 flex-wrap">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-success/10 text-success text-sm font-medium">
-                <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
-                {language === 'hindi' ? 'छिड़काव के लिए सुरक्षित' : language === 'marathi' ? 'फवारणीसाठी सुरक्षित' : 'Safe for spraying'}
-              </span>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Quick Actions Grid */}
-        <div>
-          <h2 className="text-lg font-bold mb-4">{t('dashboard.quick_actions')}</h2>
-          <div className="grid grid-cols-2 gap-3">
-            {quickActions.map((action, index) => (
-              <Link key={action.to} to={action.to}>
-                <Card 
-                  variant="elevated" 
-                  className="h-full hover:scale-[1.02] transition-transform duration-200"
-                  style={{ animationDelay: `${index * 50}ms` }}
-                >
-                  <CardContent className="p-4 flex flex-col items-start gap-3">
-                    <div className={`w-11 h-11 rounded-xl ${action.color} flex items-center justify-center`}>
-                      <action.icon className="h-5 w-5 text-primary-foreground" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-sm">{action.label}</h3>
-                      <p className="text-xs text-muted-foreground mt-0.5">{action.description}</p>
-                    </div>
-                  </CardContent>
-                </Card>
+          </div>
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
+            {filtered.map(tool => (
+              <Link key={tool.to} to={tool.to} className="group flex min-w-0 items-start gap-3 rounded-lg border border-border bg-card p-4 sm:p-5 transition-colors hover:border-primary/50 focus-visible:outline-2 focus-visible:outline-ring">
+                <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${tool.tone}`}><tool.icon className="h-5 w-5" /></span>
+                <div className="min-w-0 flex-1"><h3 className="text-sm sm:text-base font-semibold leading-snug break-words">{tool.label}</h3><p className="mt-1 text-xs sm:text-sm text-muted-foreground leading-relaxed break-words">{tool.description}</p></div>
+                <ArrowUpRight className="hidden sm:block h-4 w-4 shrink-0 text-muted-foreground group-hover:text-primary" />
               </Link>
             ))}
           </div>
-        </div>
+          {filtered.length === 0 && <div className="py-10 text-center"><Search className="mx-auto mb-3 h-6 w-6 text-muted-foreground" /><p className="text-muted-foreground">{t('dashboard.no_results')}</p><Button variant="link" onClick={() => setSearch('')}>{t('dashboard.clear_search')}</Button></div>}
+        </section>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 [&>*]:h-full">
-        {/* Livestock market */}
-        <Link to="/livestock">
-          <Card variant="elevated" className="h-full border-primary/20 hover:scale-[1.01] transition-transform">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <PawPrint className="h-6 w-6 text-primary" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold">
-                    {language === 'marathi' ? 'जनावरे खरेदी-विक्री' : language === 'hindi' ? 'पशु खरीद-बिक्री' : 'Livestock Buy & Sell'}
-                  </h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    {language === 'marathi' ? 'गाय, म्हैस, शेळी विका किंवा विकत घ्या' : language === 'hindi' ? 'गाय, भैंस, बकरी बेचें या खरीदें' : 'Sell or buy cows, buffaloes, goats'}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-
-        {/* Fertilizer Calculator */}
-        <Link to="/fertilizer-calculator">
-          <Card variant="elevated" className="border-purple-500/20 hover:scale-[1.01] transition-transform">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center">
-                  <Calculator className="h-6 w-6 text-purple-600" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold">
-                    {language === 'marathi' ? 'खत कॅल्क्युलेटर' : language === 'hindi' ? 'खाद कैल्कुलेटर' : 'Fertilizer Calculator'}
-                  </h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    {language === 'marathi' ? 'तुमच्या पिकासाठी NPK गरज मोजा' : language === 'hindi' ? 'अपनी फसल के लिए NPK आवश्यकता जानें' : 'Calculate NPK requirements for your crop'}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-
-        {/* Satbara Download Link */}
-        <Card variant="elevated" className="border-primary/20">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                <FolderOpen className="h-6 w-6 text-primary" />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold">
-                  {language === 'marathi' ? 'सातबारा / ७/१२ उतारा' : language === 'hindi' ? 'सातबारा / 7/12 उतारा' : 'Satbara / 7/12 Extract'}
-                </h3>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  {language === 'marathi' ? 'तुमच्या जमिनीचा ऑनलाइन उतारा पहा आणि डाउनलोड करा' : language === 'hindi' ? 'अपनी जमीन का ऑनलाइन रिकॉर्ड देखें और डाउनलोड करें' : 'View and download your land records online'}
-                </p>
-              </div>
-            </div>
-            <Button 
-              variant="outline" 
-              className="w-full mt-3"
-              onClick={() => window.open('https://bhulekh.mahabhumi.gov.in/', '_blank')}
-            >
-              {language === 'marathi' ? 'सातबारा पहा / डाउनलोड करा' : language === 'hindi' ? 'सातबारा देखें / डाउनलोड करें' : 'View / Download Satbara'}
-            </Button>
-          </CardContent>
-        </Card>
-
-        {/* Soil Health Card */}
-        <Card variant="elevated" className="border-amber-500/20">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center">
-                <FlaskConical className="h-6 w-6 text-amber-600" />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold">
-                  {language === 'marathi' ? 'मृदा आरोग्य कार्ड' : language === 'hindi' ? 'मृदा स्वास्थ्य कार्ड' : 'Soil Health Card'}
-                </h3>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  {language === 'marathi' ? 'तुमच्या जमिनीचे आरोग्य तपासा आणि कार्ड डाउनलोड करा' : language === 'hindi' ? 'अपनी मिट्टी का स्वास्थ्य जांचें और कार्ड डाउनलोड करें' : 'Check your soil health and download card'}
-                </p>
-              </div>
-            </div>
-            <Button 
-              variant="outline" 
-              className="w-full mt-3 border-amber-500/30 text-amber-600 hover:bg-amber-500/10"
-              onClick={() => window.open('https://soilhealth.dac.gov.in/', '_blank')}
-            >
-              {language === 'marathi' ? 'मृदा कार्ड पहा' : language === 'hindi' ? 'मृदा कार्ड देखें' : 'View Soil Card'}
-            </Button>
-          </CardContent>
-        </Card>
-
-        {/* PM Kisan Status Check */}
-        <Card variant="elevated" className="border-emerald-500/20">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center">
-                <IndianRupee className="h-6 w-6 text-emerald-600" />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold">
-                  {language === 'marathi' ? 'पीएम किसान स्थिती' : language === 'hindi' ? 'पीएम किसान स्थिति' : 'PM Kisan Status'}
-                </h3>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  {language === 'marathi' ? 'तुमच्या पीएम किसान हप्त्याची स्थिती तपासा' : language === 'hindi' ? 'अपनी पीएम किसान किस्त की स्थिति जांचें' : 'Check your PM Kisan installment status'}
-                </p>
-              </div>
-            </div>
-            <Button 
-              variant="outline" 
-              className="w-full mt-3 border-emerald-500/30 text-emerald-600 hover:bg-emerald-500/10"
-              onClick={() => window.open('https://pmkisan.gov.in/BeneficiaryStatus.aspx', '_blank')}
-            >
-              {language === 'marathi' ? 'स्थिती तपासा' : language === 'hindi' ? 'स्थिति जांचें' : 'Check Status'}
-            </Button>
-          </CardContent>
-        </Card>
-
-        {/* PMFBY Crop Insurance Status */}
-        <Card variant="elevated" className="border-blue-500/20">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center">
-                <ShieldCheck className="h-6 w-6 text-blue-600" />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold">
-                  {language === 'marathi' ? 'पीक विमा (PMFBY)' : language === 'hindi' ? 'फसल बीमा (PMFBY)' : 'Crop Insurance (PMFBY)'}
-                </h3>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  {language === 'marathi' ? 'तुमच्या पीक विम्याची स्थिती तपासा' : language === 'hindi' ? 'अपनी फसल बीमा स्थिति जांचें' : 'Check your crop insurance status'}
-                </p>
-              </div>
-            </div>
-            <Button 
-              variant="outline" 
-              className="w-full mt-3 border-blue-500/30 text-blue-600 hover:bg-blue-500/10"
-              onClick={() => window.open('https://pmfby.gov.in/farmerRegistrationForm/farmerStatus', '_blank')}
-            >
-              {language === 'marathi' ? 'विमा स्थिती तपासा' : language === 'hindi' ? 'बीमा स्थिति जांचें' : 'Check Insurance Status'}
-            </Button>
-          </CardContent>
-        </Card>
-
-        {/* App Download Section */}
+        <section className="border-t border-border pt-5">
+          <div className="grid grid-cols-2 gap-3 mb-5">
+            <Button asChild variant="outline" className="min-h-12 h-auto whitespace-normal gap-2"><Link to="/my-schemes"><FolderOpen className="h-4 w-4 shrink-0" />{t('nav.my_schemes')}</Link></Button>
+            <Button asChild variant="outline" className="min-h-12 h-auto whitespace-normal gap-2"><Link to="/alerts"><Bell className="h-4 w-4 shrink-0" />{t('nav.alerts')}</Link></Button>
+          </div>
+          <Button variant="ghost" onClick={() => setShowServices(value => !value)} aria-expanded={showServices} aria-controls="official-services" className="w-full min-h-12 justify-between px-0 text-base font-semibold">{t('dashboard.services')}<ChevronDown className={`h-5 w-5 transition-transform ${showServices ? 'rotate-180' : ''}`} /></Button>
+          {showServices && <div id="official-services" className="grid grid-cols-2 gap-3 pt-3">{services.map(service => (
+            <Button asChild key={service.href} variant="outline" className="h-auto min-h-20 justify-start whitespace-normal p-3 sm:p-4"><a href={service.href} target="_blank" rel="noopener noreferrer"><service.icon className="h-5 w-5 shrink-0 text-primary" /><span className="min-w-0 text-left"><span className="block text-sm font-semibold">{service.label}</span><span className="block text-xs text-muted-foreground mt-1">{t('dashboard.official')}</span></span><ArrowUpRight className="ml-auto h-4 w-4 shrink-0" /></a></Button>
+          ))}</div>}
+        </section>
         <AppDownloadSection />
-
-        {/* Alerts Preview */}
-        <Card variant="outlined" className="border-warning/30 bg-warning/5">
-          <CardContent className="p-4">
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-xl bg-warning/20 flex items-center justify-center flex-shrink-0">
-                <Bell className="h-5 w-5 text-warning" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-sm">
-                  {language === 'hindi' ? 'नई योजना अलर्ट!' : language === 'marathi' ? 'नवीन योजना सूचना!' : 'New Scheme Alert!'}
-                </h3>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {language === 'hindi' 
-                    ? 'पीएम-किसान किस्त की अंतिम तिथि 5 दिनों में है। ₹2,000 प्राप्त करने के लिए अपना केवाईसी पूरा करें।'
-                    : language === 'marathi'
-                    ? 'पीएम-किसान हप्त्याची शेवटची तारीख 5 दिवसात आहे. ₹2,000 मिळविण्यासाठी तुमचे केवायसी पूर्ण करा.'
-                    : 'PM-KISAN installment deadline is in 5 days. Complete your KYC to receive ₹2,000.'}
-                </p>
-                <Link to="/alerts">
-                  <Button variant="link" size="sm" className="px-0 mt-1 h-auto text-xs">
-                    {t('common.view_all')} →
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        </div>
-
-        {/* Footer */}
-        <div className="text-center pt-4 pb-20 text-xs text-muted-foreground">
-          {t('app.footer')}
-        </div>
+        <footer className="text-center pb-8 text-xs text-muted-foreground">{t('app.footer')}</footer>
       </div>
-
-      {/* Floating Chatbot */}
       <ChatBot />
     </AppLayout>
   );
 };
-
 export default Index;

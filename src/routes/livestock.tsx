@@ -5,9 +5,9 @@ export const Route = createFileRoute("/livestock")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Livestock Buy & Sell | FarmWise" },
+      { title: "Livestock Buy & Sell | Tatyashree Farmer" },
       { name: "description", content: "Farmers buy and sell cows, buffaloes, goats and other animals directly." },
-      { property: "og:title", content: "Livestock Buy & Sell | FarmWise" },
+      { property: "og:title", content: "Livestock Buy & Sell | Tatyashree Farmer" },
       { property: "og:description", content: "Farmers buy and sell cows, buffaloes, goats and other animals directly." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
