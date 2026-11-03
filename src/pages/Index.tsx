@@ -8,7 +8,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import AppDownloadSection from '@/components/AppDownload';
 import ChatBot from '@/components/ChatBot';
 import farmPhoto from '@/assets/farm-dashboard.jpg';
-import { Sprout, Bug, Cloud, TrendingUp, Building2, Bell, FolderOpen, FlaskConical, IndianRupee, ShieldCheck, Calculator, PawPrint, Wallet, Search, ArrowUpRight, ChevronDown, X } from 'lucide-react';
+import { Sprout, Bug, Cloud, TrendingUp, Building2, Bell, FolderOpen, FlaskConical, IndianRupee, ShieldCheck, Calculator, PawPrint, Wallet, Search, ArrowUpRight, ChevronDown, X, Download, FileText } from 'lucide-react';
 
 const Index = () => {
   const { user } = useAuth();
@@ -27,10 +27,14 @@ const Index = () => {
     { to: '/fertilizer-calculator', icon: Calculator, label: t('dashboard.fertilizer'), description: t('dashboard.fertilizer_desc'), tone: 'bg-secondary text-secondary-foreground' },
   ];
   const services = [
-    { href: 'https://bhulekh.mahabhumi.gov.in/', icon: FolderOpen, label: t('dashboard.satbara') },
     { href: 'https://soilhealth.dac.gov.in/', icon: FlaskConical, label: t('dashboard.soil') },
     { href: 'https://pmkisan.gov.in/', icon: IndianRupee, label: t('dashboard.pmkisan') },
     { href: 'https://pmfby.gov.in/', icon: ShieldCheck, label: t('dashboard.insurance') },
+  ];
+  const satbaraOptions = [
+    { href: 'https://bhulekh.mahabhumi.gov.in/', icon: Download, label: t('satbara.download'), description: t('satbara.download_desc') },
+    { href: 'https://digitalsatbara.mahabhumi.gov.in/', icon: FileText, label: t('satbara.digital'), description: t('satbara.digital_desc') },
+    { href: 'https://aaplesarkar.mahaonline.gov.in/', icon: Building2, label: t('satbara.aaple'), description: t('satbara.aaple_desc') },
   ];
   const query = search.trim().toLocaleLowerCase();
   const filtered = tools.filter(tool => `${tool.label} ${tool.description}`.toLocaleLowerCase().includes(query));
