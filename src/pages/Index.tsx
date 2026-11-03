@@ -8,7 +8,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import AppDownloadSection from '@/components/AppDownload';
 import ChatBot from '@/components/ChatBot';
 import farmPhoto from '@/assets/farm-dashboard.jpg';
-import { Sprout, Bug, Cloud, TrendingUp, Building2, Bell, FolderOpen, FlaskConical, IndianRupee, ShieldCheck, Calculator, PawPrint, Wallet, Search, ArrowUpRight, ChevronDown, X } from 'lucide-react';
+import { Sprout, Bug, Cloud, TrendingUp, Building2, Bell, FolderOpen, FlaskConical, IndianRupee, ShieldCheck, Calculator, PawPrint, Wallet, Search, ArrowUpRight, ChevronDown, X, Download, FileText } from 'lucide-react';
 
 const Index = () => {
   const { user } = useAuth();
@@ -27,10 +27,14 @@ const Index = () => {
     { to: '/fertilizer-calculator', icon: Calculator, label: t('dashboard.fertilizer'), description: t('dashboard.fertilizer_desc'), tone: 'bg-secondary text-secondary-foreground' },
   ];
   const services = [
-    { href: 'https://bhulekh.mahabhumi.gov.in/', icon: FolderOpen, label: t('dashboard.satbara') },
     { href: 'https://soilhealth.dac.gov.in/', icon: FlaskConical, label: t('dashboard.soil') },
     { href: 'https://pmkisan.gov.in/', icon: IndianRupee, label: t('dashboard.pmkisan') },
     { href: 'https://pmfby.gov.in/', icon: ShieldCheck, label: t('dashboard.insurance') },
+  ];
+  const satbaraOptions = [
+    { href: 'https://bhulekh.mahabhumi.gov.in/', icon: Download, label: t('satbara.download'), description: t('satbara.download_desc') },
+    { href: 'https://digitalsatbara.mahabhumi.gov.in/', icon: FileText, label: t('satbara.digital'), description: t('satbara.digital_desc') },
+    { href: 'https://aaplesarkar.mahaonline.gov.in/', icon: Building2, label: t('satbara.aaple'), description: t('satbara.aaple_desc') },
   ];
   const query = search.trim().toLocaleLowerCase();
   const filtered = tools.filter(tool => `${tool.label} ${tool.description}`.toLocaleLowerCase().includes(query));
@@ -70,6 +74,25 @@ const Index = () => {
             ))}
           </div>
           {filtered.length === 0 && <div className="py-10 text-center"><Search className="mx-auto mb-3 h-6 w-6 text-muted-foreground" /><p className="text-muted-foreground">{t('dashboard.no_results')}</p><Button variant="link" onClick={() => setSearch('')}>{t('dashboard.clear_search')}</Button></div>}
+        </section>
+
+        <section aria-labelledby="satbara-heading" className="border-t border-border pt-5">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary"><FolderOpen className="h-5 w-5" /></span>
+            <div>
+              <h2 id="satbara-heading" className="text-xl font-bold">{t('satbara.title')}</h2>
+              <p className="text-sm text-muted-foreground">{t('satbara.subtitle')}</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
+            {satbaraOptions.map(option => (
+              <a key={option.href} href={option.href} target="_blank" rel="noopener noreferrer" className="group flex min-w-0 items-start gap-3 rounded-lg border border-border bg-card p-4 sm:p-5 transition-colors hover:border-primary/50 focus-visible:outline-2 focus-visible:outline-ring">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"><option.icon className="h-5 w-5" /></span>
+                <div className="min-w-0 flex-1"><h3 className="text-sm sm:text-base font-semibold leading-snug break-words">{option.label}</h3><p className="mt-1 text-xs sm:text-sm text-muted-foreground leading-relaxed break-words">{option.description}</p></div>
+                <ArrowUpRight className="hidden sm:block h-4 w-4 shrink-0 text-muted-foreground group-hover:text-primary" />
+              </a>
+            ))}
+          </div>
         </section>
 
         <section className="border-t border-border pt-5">
