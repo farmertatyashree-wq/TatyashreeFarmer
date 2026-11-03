@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_access_state: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          status: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          message: string
+          status: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          status?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       farm_expenses: {
         Row: {
           amount: number
@@ -167,6 +191,48 @@ export type Database = {
           id?: string
           mobile?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      saved_schemes: {
+        Row: {
+          application_number: string | null
+          applied_date: string | null
+          benefit: string
+          created_at: string
+          documents: Json
+          id: string
+          name: string
+          notes: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          application_number?: string | null
+          applied_date?: string | null
+          benefit?: string
+          created_at?: string
+          documents?: Json
+          id?: string
+          name: string
+          notes?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          application_number?: string | null
+          applied_date?: string | null
+          benefit?: string
+          created_at?: string
+          documents?: Json
+          id?: string
+          name?: string
+          notes?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }

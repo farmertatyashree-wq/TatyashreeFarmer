@@ -1,0 +1,10 @@
+CREATE TABLE public.ai_access_state (id text PRIMARY KEY, status integer NOT NULL, message text NOT NULL, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now());
+GRANT ALL ON public.ai_access_state TO service_role;
+ALTER TABLE public.ai_access_state ENABLE ROW LEVEL SECURITY;
+CREATE TRIGGER ai_access_state_updated BEFORE UPDATE ON public.ai_access_state FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+CREATE TABLE public.saved_schemes (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), user_id uuid NOT NULL DEFAULT auth.uid() REFERENCES auth.users(id), name text NOT NULL, benefit text NOT NULL DEFAULT '', status text NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','applied','approved','rejected')), application_number text, applied_date date, documents jsonb NOT NULL DEFAULT '[]'::jsonb, notes text, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now());
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.saved_schemes TO authenticated;
+GRANT ALL ON public.saved_schemes TO service_role;
+ALTER TABLE public.saved_schemes ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Own saved schemes" ON public.saved_schemes FOR ALL TO authenticated USING (auth.uid()=user_id) WITH CHECK (auth.uid()=user_id);
+CREATE TRIGGER saved_schemes_updated BEFORE UPDATE ON public.saved_schemes FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
