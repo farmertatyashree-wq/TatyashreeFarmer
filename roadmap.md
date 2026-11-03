@@ -1,5 +1,9 @@
 # Smart farming upgrade
 
+- [ ] Current request: connect existing AI assistant, crop planning, crop-photo review, fertilizer guidance and market commentary to Gemini; verify actual calls and preserve official-service links and private records.
+- [ ] Current request: replace fabricated diagnoses, market history, eligibility and notifications with honest results or unavailable states; connect weather to a real forecast source.
+- [ ] Current request: verify finance, livestock and saved-scheme flows; report any service or account blockers rather than claiming every feature works.
+
 - [x] Phase 1: Audit existing functionality; improve dashboard and shared navigation; establish Marathi-first language and localization foundations; verify.
 - [ ] Phase 2: Farm profiles, Digital Farm Book and crop records.
 - [ ] Phase 3: Extend existing accounting, crop planner and reminders.
