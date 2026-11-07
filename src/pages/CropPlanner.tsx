@@ -7,7 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input";
 import { Sprout, IndianRupee, Calendar, Droplets, FlaskConical, TrendingUp, CheckCircle2, Sparkles, Loader2, Bug, ShoppingBag, AlertTriangle } from "lucide-react";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
-import { supabase } from "@/integrations/supabase/client";
+import { useFarmingAI } from '@/hooks/use-farming-ai';
+import { AIAdvisoryNotice } from '@/components/AIAdvisoryNotice';
 import { useToast } from "@/hooks/use-toast";
 
 const getTranslatedOptions = (language: Language) => {
@@ -109,6 +110,7 @@ interface AICropPlan {
 const CropPlanner = () => {
   const { t, language } = useLanguage();
   const { toast } = useToast();
+  const askAI = useFarmingAI();
   const [crop, setCrop] = useState("");
   const [area, setArea] = useState("");
   const [water, setWater] = useState("");
@@ -119,7 +121,7 @@ const CropPlanner = () => {
   const options = getTranslatedOptions(language);
 
   const handleSubmit = async () => {
-    if (!crop || !area || !water || !soil) {
+    if (!crop || !Number.isFinite(Number(area)) || Number(area) <= 0 || !water || !soil) {
       toast({
         title: language === 'marathi' ? 'अपूर्ण माहिती' : language === 'hindi' ? 'अपूर्ण जानकारी' : 'Incomplete Information',
         description: language === 'marathi' ? 'कृपया सर्व माहिती भरा' : language === 'hindi' ? 'कृपया सभी जानकारी भरें' : 'Please fill all information',
@@ -130,17 +132,12 @@ const CropPlanner = () => {
 
     setIsLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('ai-crop-planner', {
-        body: {
+      const data = await askAI<AICropPlan>('planner', {
           crop,
           area: parseFloat(area),
           waterSource: water,
           soilType: soil,
-          language
-        }
-      });
-
-      if (error) throw error;
+        }, language);
       setPlan(data);
       
       toast({
@@ -151,7 +148,7 @@ const CropPlanner = () => {
       console.error('AI Crop Planner error:', error);
       toast({
         title: language === 'marathi' ? 'त्रुटी' : language === 'hindi' ? 'त्रुटि' : 'Error',
-        description: language === 'marathi' ? 'योजना मिळवता आली नाही' : language === 'hindi' ? 'योजना नहीं मिल सकी' : 'Could not get plan',
+        description: error instanceof Error ? error.message : 'AI service unavailable',
         variant: 'destructive'
       });
     } finally {
@@ -212,6 +209,7 @@ const CropPlanner = () => {
   return (
     <AppLayout title={labels.title} showBack>
       <div className="px-4 py-5 space-y-5 animate-fade-in">
+        <AIAdvisoryNotice />
         {/* Input Form */}
         <Card variant="elevated">
           <CardHeader>
@@ -367,13 +365,13 @@ const CropPlanner = () => {
                           <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                             index === 0 ? 'bg-primary text-primary-foreground' : 'bg-muted'
                           }`}>
-                            {index === plan.timeline!.length - 1 ? (
+                            {index === (plan.timeline?.length ?? 0) - 1 ? (
                               <CheckCircle2 className="h-5 w-5" />
                             ) : (
                               <span className="text-sm font-bold">{index + 1}</span>
                             )}
                           </div>
-                          {index < plan.timeline!.length - 1 && (
+                          {index < (plan.timeline?.length ?? 0) - 1 && (
                             <div className="w-0.5 h-full bg-border mt-2" />
                           )}
                         </div>

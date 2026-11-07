@@ -3,7 +3,8 @@ import AppLayout from "@/components/layout/AppLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Camera, Upload, Bug, Leaf, FlaskConical, AlertTriangle, CheckCircle2, Download, Share2, Pill, ShoppingCart, ExternalLink } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { useFarmingAI } from '@/hooks/use-farming-ai';
+import { AIAdvisoryNotice } from '@/components/AIAdvisoryNotice';
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import jsPDF from "jspdf";
@@ -25,7 +26,7 @@ interface ChemicalTreatment {
 
 interface Disease {
   name: string;
-  confidence: number;
+  confidence?: number;
   description: string;
   symptoms: string[];
   organicTreatment: OrganicTreatment[] | string[];
@@ -35,6 +36,8 @@ interface Disease {
 
 const DiseaseScanner = () => {
   const { t, language } = useLanguage();
+  const askAI = useFarmingAI();
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
   const [image, setImage] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [results, setResults] = useState<Disease[] | null>(null);
@@ -190,7 +193,7 @@ const DiseaseScanner = () => {
       // Disease Name
       doc.setFontSize(14);
       doc.setFont('helvetica', 'bold');
-      doc.text(`${index + 1}. ${disease.name} (${disease.confidence}%)`, 15, yPos);
+      doc.text(`${index + 1}. ${disease.name} (AI estimate)`, 15, yPos);
       yPos += 8;
 
       // Description
@@ -284,7 +287,7 @@ const DiseaseScanner = () => {
     message += `${labels.health}: ${getHealthLabel(overallHealth || 'unknown')}\n\n`;
 
     results.forEach((disease, index) => {
-      message += `*${index + 1}. ${disease.name}* (${disease.confidence}%)\n`;
+      message += `*${index + 1}. ${disease.name}* (AI estimate)\n`;
       message += `${disease.description}\n\n`;
 
       if (disease.chemicalTreatment.length > 0) {
@@ -324,6 +327,10 @@ const DiseaseScanner = () => {
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+        toast({ title: 'JPG / PNG / WebP', description: 'Please select a crop photo.', variant: 'destructive' });
+        return;
+      }
       if (file.size > 5 * 1024 * 1024) {
         toast({
           title: getFileSizeError(),
@@ -347,18 +354,13 @@ const DiseaseScanner = () => {
     setIsAnalyzing(true);
     setResults(null);
     setOverallHealth(null);
+    setAnalysisError(null);
 
     try {
-      const { data, error } = await supabase.functions.invoke('disease-detection', {
-        body: { imageBase64, language }
-      });
-
-      if (error) throw error;
-      if (data.error) throw new Error(data.error);
+      const data = await askAI<{ diseases: Disease[]; overallHealth: string }>('disease', { imageBase64 }, language);
 
       const diseases: Disease[] = data.diseases?.map((d: any) => ({
         name: d.name,
-        confidence: d.confidence,
         description: d.description,
         symptoms: d.symptoms || [],
         organicTreatment: d.organicTreatment || [],
@@ -369,7 +371,7 @@ const DiseaseScanner = () => {
       setResults(diseases);
       setOverallHealth(data.overallHealth || "unknown");
 
-      if (diseases.length === 0) {
+      if (diseases.length === 0 && data.overallHealth === 'good') {
         toast({
           title: t('scanner.healthy'),
           description: t('scanner.noDisease'),
@@ -383,18 +385,9 @@ const DiseaseScanner = () => {
         variant: "destructive",
       });
       
-      setResults([
-        {
-          name: "Leaf Blight",
-          confidence: 75,
-          description: "A fungal disease causing brown lesions on leaves.",
-          symptoms: ["Brown spots on leaves", "Yellow halo around spots", "Leaf tip drying"],
-          organicTreatment: ["Neem oil spray (5ml/L water)", "Remove infected leaves"],
-          chemicalTreatment: ["Mancozeb 75% WP (2.5g/L)", "Copper oxychloride (3g/L)"],
-          prevention: ["Crop rotation", "Proper drainage"],
-        }
-      ]);
-      setOverallHealth("moderate");
+      setAnalysisError(error instanceof Error ? error.message : 'AI service unavailable');
+      setResults(null);
+      setOverallHealth(null);
     } finally {
       setIsAnalyzing(false);
     }
@@ -409,6 +402,8 @@ const DiseaseScanner = () => {
   return (
     <AppLayout title={t('scanner.title')} showBack>
       <div className="px-4 py-5 space-y-5 animate-fade-in">
+        <AIAdvisoryNotice />
+        {analysisError && <p role="alert" className="text-sm text-destructive">{analysisError}</p>}
         {!image ? (
           <Card variant="elevated">
             <CardHeader>
@@ -519,15 +514,15 @@ const DiseaseScanner = () => {
                       <div className="flex items-start justify-between">
                         <div className="flex items-center gap-3">
                           <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                            disease.confidence > 70 ? 'bg-destructive/10' : 'bg-warning/10'
+                            (disease.confidence ?? 0) > 70 ? 'bg-destructive/10' : 'bg-warning/10'
                           }`}>
                             <AlertTriangle className={`h-5 w-5 ${
-                              disease.confidence > 70 ? 'text-destructive' : 'text-warning'
+                              (disease.confidence ?? 0) > 70 ? 'text-destructive' : 'text-warning'
                             }`} />
                           </div>
                           <div>
                             <CardTitle className="text-base">{disease.name}</CardTitle>
-                            <p className="text-sm text-muted-foreground">{disease.confidence}% {getMatchText()}</p>
+                            <p className="text-sm text-muted-foreground">{language === 'marathi' ? 'संभाव्य कारण — तज्ज्ञांकडून खात्री करा' : language === 'hindi' ? 'संभावित कारण — विशेषज्ञ से पुष्टि करें' : 'Possible cause — confirm with an expert'}</p>
                           </div>
                         </div>
                       </div>
@@ -681,7 +676,7 @@ const DiseaseScanner = () => {
               </div>
             )}
 
-            {results && results.length === 0 && (
+            {results && results.length === 0 && overallHealth === 'good' && (
               <Card variant="outlined" className="border-success/30 bg-success/5">
                 <CardContent className="p-6 text-center">
                   <CheckCircle2 className="h-12 w-12 text-success mx-auto mb-3" />
