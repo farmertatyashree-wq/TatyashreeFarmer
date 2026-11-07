@@ -7,7 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input";
 import { FlaskConical, Leaf, Droplets, Calculator, Info, ShoppingCart, ExternalLink, Sparkles, Loader2, Calendar, IndianRupee } from "lucide-react";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
-import { supabase } from "@/integrations/supabase/client";
+import { useFarmingAI } from '@/hooks/use-farming-ai';
+import { AIAdvisoryNotice } from '@/components/AIAdvisoryNotice';
 import { useToast } from "@/hooks/use-toast";
 
 const cropTranslations: Record<string, Record<Language, string>> = {
@@ -36,6 +37,7 @@ interface AIResults {
 const FertilizerCalculator = () => {
   const { t, language } = useLanguage();
   const { toast } = useToast();
+  const askAI = useFarmingAI();
   const [selectedCrop, setSelectedCrop] = useState<string>("");
   const [landArea, setLandArea] = useState<string>("");
   const [landUnit, setLandUnit] = useState<string>("acre");
@@ -56,7 +58,7 @@ const FertilizerCalculator = () => {
   };
 
   const calculateFertilizer = async () => {
-    if (!selectedCrop || !landArea || parseFloat(landArea) <= 0) {
+    if (!selectedCrop || !Number.isFinite(Number(landArea)) || Number(landArea) <= 0) {
       toast({
         title: language === 'marathi' ? 'अपूर्ण माहिती' : language === 'hindi' ? 'अपूर्ण जानकारी' : 'Incomplete Information',
         description: language === 'marathi' ? 'कृपया पीक आणि जमीन क्षेत्र निवडा' : language === 'hindi' ? 'कृपया फसल और भूमि क्षेत्र चुनें' : 'Please select crop and land area',
@@ -67,16 +69,11 @@ const FertilizerCalculator = () => {
 
     setIsLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('ai-fertilizer', {
-        body: {
+      const data = await askAI<AIResults>('fertilizer', {
           crop: selectedCrop,
           landArea: parseFloat(landArea),
           landUnit,
-          language
-        }
-      });
-
-      if (error) throw error;
+        }, language);
       setResults(data);
       
       toast({
@@ -87,7 +84,7 @@ const FertilizerCalculator = () => {
       console.error('AI Fertilizer error:', error);
       toast({
         title: language === 'marathi' ? 'त्रुटी' : language === 'hindi' ? 'त्रुटि' : 'Error',
-        description: language === 'marathi' ? 'शिफारस मिळवता आली नाही' : language === 'hindi' ? 'सिफारिश नहीं मिल सकी' : 'Could not get recommendation',
+        description: error instanceof Error ? error.message : 'AI service unavailable',
         variant: 'destructive'
       });
     } finally {
@@ -176,6 +173,7 @@ const FertilizerCalculator = () => {
   return (
     <AppLayout title={labels.title} showBack>
       <div className="px-4 py-5 space-y-5 animate-fade-in">
+        <AIAdvisoryNotice />
         {/* Calculator Form */}
         <Card variant="elevated">
           <CardHeader>

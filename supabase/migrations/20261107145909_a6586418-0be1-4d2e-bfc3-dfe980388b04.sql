@@ -1,0 +1,1 @@
+CREATE POLICY "No client access to AI state" ON public.ai_access_state FOR ALL TO anon, authenticated USING (false) WITH CHECK (false);
