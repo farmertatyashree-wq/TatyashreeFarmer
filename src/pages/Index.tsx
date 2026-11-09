@@ -8,7 +8,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import AppDownloadSection from '@/components/AppDownload';
 import ChatBot from '@/components/ChatBot';
 import farmPhoto from '@/assets/farm-dashboard.jpg';
-import { Sprout, Bug, Cloud, TrendingUp, Building2, Bell, FolderOpen, FlaskConical, IndianRupee, ShieldCheck, Calculator, PawPrint, Wallet, Search, ArrowUpRight, ChevronDown, X, Download, FileText } from 'lucide-react';
+import { Sprout, Bug, Cloud, TrendingUp, Building2, Bell, FolderOpen, FlaskConical, IndianRupee, ShieldCheck, Calculator, PawPrint, Wallet, Search, ArrowUpRight, ChevronDown, X, Download, FileText, UsersRound } from 'lucide-react';
 
 const Index = () => {
   const { user } = useAuth();
@@ -21,6 +21,7 @@ const Index = () => {
     { to: '/disease-scanner', icon: Bug, label: t('nav.scan'), description: t('dashboard.doctor_desc'), tone: 'bg-accent text-accent-foreground' },
     { to: '/weather', icon: Cloud, label: t('nav.weather'), description: t('weather.forecast'), tone: 'bg-info/10 text-info' },
     { to: '/market', icon: TrendingUp, label: t('nav.market'), description: t('dashboard.mandi_prices'), tone: 'bg-success/10 text-primary' },
+    { to: '/community', icon: UsersRound, label: 'Farmer community', description: 'Share updates and learn from other farmers', tone: 'bg-secondary text-secondary-foreground' },
     { to: '/finance', icon: Wallet, label: t('nav.finance'), description: t('dashboard.finance_desc'), tone: 'bg-primary/10 text-primary' },
     { to: '/livestock', icon: PawPrint, label: t('dashboard.livestock'), description: t('dashboard.livestock_desc'), tone: 'bg-accent text-accent-foreground' },
     { to: '/schemes', icon: Building2, label: t('nav.schemes'), description: t('dashboard.govt_schemes'), tone: 'bg-info/10 text-info' },

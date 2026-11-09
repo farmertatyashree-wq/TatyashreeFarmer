@@ -8,6 +8,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useFarmingAI } from '@/hooks/use-farming-ai';
 
 interface Message {
   id: string;
@@ -31,6 +32,7 @@ const ChatBot: React.FC = () => {
   const { t, language } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
+  const askAI = useFarmingAI();
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -230,15 +232,8 @@ const ChatBot: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const { data, error } = await supabase.functions.invoke('ai-chat', {
-        body: { 
-          message: text,
-          language,
-          userId: user?.id
-        }
-      });
-
-      if (error) throw error;
+      const history = messages.map((message) => ({ role: message.role, content: message.content }));
+      const data = await askAI<{ response: string }>('chat', { message: text, history }, language);
 
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),

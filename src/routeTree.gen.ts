@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AlertsRouteImport } from './routes/alerts'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as CommunityRouteImport } from './routes/community'
 import { Route as CropPlannerRouteImport } from './routes/crop-planner'
 import { Route as DiseaseScannerRouteImport } from './routes/disease-scanner'
 import { Route as FertilizerCalculatorRouteImport } from './routes/fertilizer-calculator'
@@ -36,6 +37,11 @@ const AlertsRoute = AlertsRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommunityRoute = CommunityRouteImport.update({
+  id: '/community',
+  path: '/community',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CropPlannerRoute = CropPlannerRouteImport.update({
@@ -93,6 +99,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
   '/auth': typeof AuthRoute
+  '/community': typeof CommunityRoute
   '/crop-planner': typeof CropPlannerRoute
   '/disease-scanner': typeof DiseaseScannerRoute
   '/fertilizer-calculator': typeof FertilizerCalculatorRoute
@@ -108,6 +115,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
   '/auth': typeof AuthRoute
+  '/community': typeof CommunityRoute
   '/crop-planner': typeof CropPlannerRoute
   '/disease-scanner': typeof DiseaseScannerRoute
   '/fertilizer-calculator': typeof FertilizerCalculatorRoute
@@ -124,6 +132,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
   '/auth': typeof AuthRoute
+  '/community': typeof CommunityRoute
   '/crop-planner': typeof CropPlannerRoute
   '/disease-scanner': typeof DiseaseScannerRoute
   '/fertilizer-calculator': typeof FertilizerCalculatorRoute
@@ -141,6 +150,7 @@ export interface FileRouteTypes {
     | '/'
     | '/alerts'
     | '/auth'
+    | '/community'
     | '/crop-planner'
     | '/disease-scanner'
     | '/fertilizer-calculator'
@@ -156,6 +166,7 @@ export interface FileRouteTypes {
     | '/'
     | '/alerts'
     | '/auth'
+    | '/community'
     | '/crop-planner'
     | '/disease-scanner'
     | '/fertilizer-calculator'
@@ -171,6 +182,7 @@ export interface FileRouteTypes {
     | '/'
     | '/alerts'
     | '/auth'
+    | '/community'
     | '/crop-planner'
     | '/disease-scanner'
     | '/fertilizer-calculator'
@@ -187,6 +199,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AlertsRoute: typeof AlertsRoute
   AuthRoute: typeof AuthRoute
+  CommunityRoute: typeof CommunityRoute
   CropPlannerRoute: typeof CropPlannerRoute
   DiseaseScannerRoute: typeof DiseaseScannerRoute
   FertilizerCalculatorRoute: typeof FertilizerCalculatorRoute
@@ -220,6 +233,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/community': {
+      id: '/community'
+      path: '/community'
+      fullPath: '/community'
+      preLoaderRoute: typeof CommunityRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/crop-planner': {
@@ -299,6 +319,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AlertsRoute: AlertsRoute,
   AuthRoute: AuthRoute,
+  CommunityRoute: CommunityRoute,
   CropPlannerRoute: CropPlannerRoute,
   DiseaseScannerRoute: DiseaseScannerRoute,
   FertilizerCalculatorRoute: FertilizerCalculatorRoute,

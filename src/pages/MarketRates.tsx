@@ -8,6 +8,7 @@ import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from "rec
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useFarmingAI } from "@/hooks/use-farming-ai";
 
 interface CropPrice {
   id: string;
@@ -53,6 +54,7 @@ const MarketRates = () => {
   const [selectedPrice, setSelectedPrice] = useState<CropPrice | null>(null);
   const [aiAnalysis, setAiAnalysis] = useState<AIAnalysis | null>(null);
   const { toast } = useToast();
+  const askAI = useFarmingAI();
 
   const getDistrictLabel = (district: string) => {
     const districtNames: Record<string, Record<string, string>> = {
@@ -191,15 +193,10 @@ const MarketRates = () => {
   const getAIAnalysis = async () => {
     setAiLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('ai-market-analysis', {
-        body: {
-          crop: selectedCrop,
-          district: selectedDistrict,
-          language
-        }
-      });
-
-      if (error) throw error;
+      const data = await askAI<{ analysis: AIAnalysis }>('market', {
+        crop: selectedCrop,
+        district: selectedDistrict,
+      }, language);
       setAiAnalysis(data.analysis);
       
       toast({
